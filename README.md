@@ -1,0 +1,1 @@
+# django_test_task_july_2021
