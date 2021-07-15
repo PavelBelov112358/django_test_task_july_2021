@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    working_dir: /app
+    command: bash -c "python3 manage.py migrate --noinput && python3 manage.py runserver"
+    networks:
+      - default
+    ports:
+    - 8000:8000
+    environment:
+      - SECRET_KEY=secret
+      - DEBUG=True
+      - ALLOWED_HOSTS=*
+      - POSTGRES_NAME=products
+      - POSTGRES_USER=pg_user
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - REDIS_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+    links:
+      - db:db
+  celery:
+    build: .
+    working_dir: /app
+    command: celery -A django_test_task_july_2021 worker -l info
+    depends_on:
+      - redis
+    networks:
+      - default
+    environment:
+      - REDIS_BROKER_URL=redis://redis:6379/0
+  celery-beat:
+    build: .
+    working_dir: /app
+    command: celery -A django_test_task_july_2021 beat -l info
+    depends_on:
+      - db
+      - redis
+    networks:
+      - default
+    environment:
+      - REDIS_BROKER_URL=redis://redis:6379/0
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=products
+      - POSTGRES_USER=pg_user
+      - POSTGRES_PASSWORD=123
+    networks:
+      - default
+    ports:
+    - 5432:5432
+  redis:
+    image: redis
+    ports:
+    - 6379:6379
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
