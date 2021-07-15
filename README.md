@@ -2,3 +2,4 @@
 
 Startup instructions:
 - use "docker-compose up"
+- application has Swagger. Go to your browser: http://localhost:8000/swagger/ to see docs.
