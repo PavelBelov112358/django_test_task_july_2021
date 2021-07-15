@@ -14,7 +14,7 @@ services:
       - DEBUG=True
       - ALLOWED_HOSTS=*
       - POSTGRES_NAME=products
-      - POSTGRES_USER=pg_user
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
@@ -33,6 +33,8 @@ services:
     networks:
       - default
     environment:
+      - SECRET_KEY=secret
+      - DEBUG=False
       - REDIS_BROKER_URL=redis://redis:6379/0
   celery-beat:
     build: .
@@ -44,12 +46,14 @@ services:
     networks:
       - default
     environment:
+      - SECRET_KEY=secret
+      - DEBUG=False
       - REDIS_BROKER_URL=redis://redis:6379/0
   db:
     image: postgres
     environment:
       - POSTGRES_DB=products
-      - POSTGRES_USER=pg_user
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123
     networks:
       - default
