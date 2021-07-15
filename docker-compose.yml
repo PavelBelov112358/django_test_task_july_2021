@@ -4,7 +4,7 @@ services:
   web:
     build: .
     working_dir: /app
-    command: bash -c "python3 manage.py migrate --noinput && python3 manage.py runserver"
+    command: bash -c "python3 manage.py migrate --noinput && python3 manage.py runserver 0.0.0.0:8000"
     networks:
       - default
     ports:
@@ -19,16 +19,16 @@ services:
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
       - REDIS_BROKER_URL=redis://redis:6379/0
+      - TZ=Europe/Moscow
     depends_on:
       - db
       - redis
-    links:
-      - db:db
   celery:
     build: .
     working_dir: /app
     command: celery -A django_test_task_july_2021 worker -l info
     depends_on:
+      - db
       - redis
     networks:
       - default
@@ -41,20 +41,21 @@ services:
     working_dir: /app
     command: celery -A django_test_task_july_2021 beat -l info
     depends_on:
-      - db
-      - redis
+      - celery
     networks:
       - default
     environment:
       - SECRET_KEY=secret
       - DEBUG=False
       - REDIS_BROKER_URL=redis://redis:6379/0
+      - TZ=Europe/Moscow
   db:
     image: postgres
     environment:
       - POSTGRES_DB=products
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123
+      - TZ=Europe/Moscow
     networks:
       - default
     ports:
@@ -68,4 +69,3 @@ services:
 
 networks:
   default:
-    driver: bridge
