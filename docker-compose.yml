@@ -3,6 +3,7 @@ version: "3.9"
 services:
   web:
     build: .
+    restart: always
     working_dir: /app
     command: bash -c "python3 manage.py migrate --noinput && python3 manage.py runserver 0.0.0.0:8000"
     networks:
@@ -25,6 +26,7 @@ services:
       - redis
   celery:
     build: .
+    restart: always
     working_dir: /app
     command: celery -A django_test_task_july_2021 worker -l info
     depends_on:
@@ -38,6 +40,7 @@ services:
       - REDIS_BROKER_URL=redis://redis:6379/0
   celery-beat:
     build: .
+    restart: always
     working_dir: /app
     command: celery -A django_test_task_july_2021 beat -l info
     depends_on:
@@ -51,6 +54,7 @@ services:
       - TZ=Europe/Moscow
   db:
     image: postgres
+    restart: always
     environment:
       - POSTGRES_DB=products
       - POSTGRES_USER=postgres
@@ -60,8 +64,11 @@ services:
       - default
     ports:
     - 5432:5432
+    volumes:
+    - postgres_data:/var/lib/postresql/data
   redis:
     image: redis
+    restart: always
     ports:
     - 6379:6379
     networks:
@@ -69,3 +76,6 @@ services:
 
 networks:
   default:
+
+volumes:
+  postgres_data:
