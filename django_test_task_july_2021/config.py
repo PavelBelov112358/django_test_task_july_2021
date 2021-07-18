@@ -14,10 +14,13 @@ class APPSettings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_PORT: int
 
+    USE_TZ: bool
+    TZ: str
+
     REDIS_BROKER_URL: RedisDsn
 
     @classmethod
-    @validator('ALLOWED_HOSTS')
+    @validator('ALLOWED_HOSTS', allow_reuse=True)
     def get_list_allowed_hosts(cls, v: str) -> list:
         return v.split(',')
 

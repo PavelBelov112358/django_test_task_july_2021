@@ -6,4 +6,4 @@ class OrderStatus(models.TextChoices):
     PENDING = 'pending', _('Pending')
     COMPLETED = 'completed', _('Completed')
     CANCELED = 'canceled', _('Canceled')
-    REFUND = 'refund', _('Refund')
+    REFUNDED = 'refunded', _('Refunded')

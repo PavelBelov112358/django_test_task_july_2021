@@ -1,13 +1,12 @@
 from datetime import datetime, timedelta, timezone
 
-from celery import shared_task
-
-from .models import Order
+from django_test_task_july_2021.celery import app
 from .choices import OrderStatus
+from .models import Order
 
 
-@shared_task
-def cancel_pending_orders():
-    time_step = datetime.now(tz=timezone.utc) - timedelta(weeks=1, hours=1)
-    Order.objects.filter(status=OrderStatus.PENDING, created_at__gte=time_step).update(status=OrderStatus.CANCELED)
+@app.task
+def cancel_pending_orders() -> str:
+    time_filter = datetime.now(tz=timezone.utc) - timedelta(days=1)
+    Order.objects.filter(status=OrderStatus.PENDING, created_at__lte=time_filter).update(status=OrderStatus.CANCELED)
     return 'cancel_pending_orders'

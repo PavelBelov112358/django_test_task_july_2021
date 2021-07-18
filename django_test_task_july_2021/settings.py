@@ -116,13 +116,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = config.TZ
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = config.USE_TZ
 
 
 # Static files (CSS, JavaScript, Images)
@@ -144,7 +144,7 @@ CURRENCIES = ['RUB']
 CURRENCY_CHOICES = [('RUB', 'RUB ₽')]
 
 # Celery
-CELERY_TIMEZONE = "Europe/Moscow"
+CELERY_TIMEZONE = config.TZ
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BROKER_URL = config.REDIS_BROKER_URL

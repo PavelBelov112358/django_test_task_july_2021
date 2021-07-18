@@ -20,11 +20,12 @@ services:
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
       - REDIS_BROKER_URL=redis://redis:6379/0
+      - UZE_TZ=True
       - TZ=Europe/Moscow
     depends_on:
       - db
       - redis
-  celery:
+  celery-worker:
     build: .
     restart: always
     working_dir: /app
@@ -37,20 +38,35 @@ services:
     environment:
       - SECRET_KEY=secret
       - DEBUG=False
+      - ALLOWED_HOSTS=*
+      - POSTGRES_NAME=products
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
       - REDIS_BROKER_URL=redis://redis:6379/0
+      - UZE_TZ=True
+      - TZ=Europe/Moscow
   celery-beat:
     build: .
     restart: always
     working_dir: /app
     command: celery -A django_test_task_july_2021 beat -l info
     depends_on:
-      - celery
+      - celery-worker
     networks:
       - default
     environment:
       - SECRET_KEY=secret
       - DEBUG=False
+      - ALLOWED_HOSTS=*
+      - POSTGRES_NAME=products
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
       - REDIS_BROKER_URL=redis://redis:6379/0
+      - UZE_TZ=True
       - TZ=Europe/Moscow
   db:
     image: postgres
