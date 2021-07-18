@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   web:
+    container_name: web_app
     build: .
     restart: always
     working_dir: /app
@@ -26,6 +27,7 @@ services:
       - db
       - redis
   celery-worker:
+    container_name: celery_worker
     build: .
     restart: always
     working_dir: /app
@@ -48,6 +50,7 @@ services:
       - UZE_TZ=True
       - TZ=Europe/Moscow
   celery-beat:
+    container_name: celery_beat
     build: .
     restart: always
     working_dir: /app
@@ -69,6 +72,7 @@ services:
       - UZE_TZ=True
       - TZ=Europe/Moscow
   db:
+    container_name: postgres_db
     image: postgres
     restart: always
     environment:
@@ -83,6 +87,7 @@ services:
     volumes:
     - postgres_data:/var/lib/postresql/data
   redis:
+    container_name: redis_broker
     image: redis
     restart: always
     ports:
@@ -95,3 +100,4 @@ networks:
 
 volumes:
   postgres_data:
+    name: postgres_data
