@@ -1,8 +1,8 @@
 # django_test_task_july_2021
 
 Startup instructions:
-- use "docker-compose up --build".
-- application has Swagger. Go to your browser: http://localhost:8000/swagger/ to see docs.
+- Use "docker-compose up --build".
+- Application has Swagger. Go to your browser: http://localhost:8000/swagger/ to see docs.
 - Endpoints "POST" accept arrays of items (product, orders).
 - By default, reports are generated for all time.
   Use parameter /?date={mouth:2}-{day:2}-{year:4} to get reports from this date to today.
